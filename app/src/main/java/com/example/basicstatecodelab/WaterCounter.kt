@@ -1,6 +1,7 @@
 package com.example.basicstatecodelab
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -10,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -30,9 +32,32 @@ fun WaterCounter(modifier: Modifier = Modifier){
         Button(
             onClick = { count ++ },
             enabled = count < 10,
-            modifier = modifier.padding(top = 8.dp)
+            modifier = modifier.padding(end = 8.dp)
         ) {
             Text(text = "drink another one")
         }
     }
+}
+
+@Composable
+fun StatelessCounter(count: Int, onIncrement: () -> Unit, modifier: Modifier = Modifier){
+    Column(
+        modifier = modifier.padding(16.dp)
+    ) {
+        Text(text = "Water received", style = MaterialTheme.typography.titleMedium)
+        // Text is present, only when the count is > 0
+        if (count > 0) {
+            Text(text = "You've had $count glasses")
+        }
+        Button(onClick = onIncrement, enabled = count < 10, modifier = modifier.padding(end = 8.dp)
+        ) {
+            Text(text = "drink one")
+        }
+    }
+}
+
+@Composable
+fun StatefulCounter(modifier: Modifier = Modifier){
+    var count by rememberSaveable { mutableStateOf(0) }
+    StatelessCounter(count = count, onIncrement = { count++ }, modifier)
 }
